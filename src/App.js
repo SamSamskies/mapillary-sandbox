@@ -23,7 +23,8 @@ const MAPILLARY_SEQUENCE_LAYER = new MVTLayer({
   minZoom: 6,
   maxZoom: 14,
   getLineColor: [53, 175, 109],
-  opacity: 0.6
+  opacity: 0.6,
+  pickable: true,
 });
 
 export default function App() {
@@ -32,6 +33,13 @@ export default function App() {
           initialViewState={INITIAL_VIEW_STATE}
           controller={true}
           layers={[MAPILLARY_SEQUENCE_LAYER]}
+          getTooltip={({ object }) => {
+            if (object?.properties?.layerName === 'mapillary-images') {
+                const imageKey = object?.properties?.key;
+
+                return { html: `<img src=https://images.mapillary.com/${imageKey}/thumb-320.jpg alt="${imageKey}" />` };
+            }
+          }}
       >
         <StaticMap mapboxApiAccessToken={MAPBOX_TOKEN} />
       </DeckGL>
